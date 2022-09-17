@@ -1,0 +1,350 @@
+openapi: 3.0.3
+info:
+  title: Products API
+  description: |-
+    **Products API** is a simple example of RESTful API server based on Go.
+  contact:
+    email: daniel.haryono@shopee.com
+  version: 0.0.1
+servers:
+  - url: http://localhost:8080
+tags:
+  - name: products
+    description: Operations on products
+paths:
+  /products:
+    get:
+      tags:
+        - products
+      summary: Get all products
+      description: Get all products.
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StandardResponse"
+              example:
+                code: 200
+                message: OK
+                data:
+                  - id: 1
+                    name: Product 1
+                    description: Product 1 description
+                    quantity: 10
+                  - id: 2
+                    name: Product 2
+                    description: Product 2 description
+                    quantity: 10
+        "500":
+          $ref: "#/components/responses/500"
+    post:
+      tags:
+        - products
+      summary: Insert a product
+      description: Insert a product.
+      requestBody:
+        $ref: "#/components/requestBodies/InsertProduct"
+      responses:
+        "201":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StandardResponse"
+              example:
+                code: 201
+                message: Created
+                data:
+                  id: 1
+                  name: Product 1
+                  description: Product 1 description
+                  quantity: 10
+        "400":
+          $ref: "#/components/responses/400"
+        "500":
+          $ref: "#/components/responses/500"
+  /products/{id}:
+    get:
+      tags:
+        - products
+      summary: Get product by its id
+      description: Get product by its id.
+      parameters:
+        - name: id
+          in: path
+          description: Product ID
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StandardResponse"
+              example:
+                code: 200
+                message: OK
+                data:
+                  id: 1
+                  name: Product 1
+                  description: Product 1 description
+                  quantity: 10
+        "400":
+          $ref: "#/components/responses/400"
+        "404":
+          $ref: "#/components/responses/404"
+        "500":
+          $ref: "#/components/responses/500"
+    put:
+      tags:
+        - products
+      summary: Update product by its id
+      description: Update product by its id.
+      requestBody:
+        $ref: "#/components/requestBodies/UpdateProduct"
+      parameters:
+        - name: id
+          in: path
+          description: Product ID
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StandardResponse"
+              example:
+                code: 200
+                message: OK
+                data:
+                  id: 1
+                  name: Product 1
+                  description: Product 1 description
+                  quantity: 10
+        "400":
+          $ref: "#/components/responses/400"
+        "404":
+          $ref: "#/components/responses/404"
+        "500":
+          $ref: "#/components/responses/500"
+    patch:
+      tags:
+        - products
+      summary: Update product's quantity by its id
+      description: Update product's quantity by its id.
+      requestBody:
+        $ref: "#/components/requestBodies/UpdateProductQuantity"
+      parameters:
+        - name: id
+          in: path
+          description: Product ID
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StandardResponse"
+              example:
+                code: 200
+                message: OK
+                data:
+                  id: 1
+                  name: Product 1
+                  description: Product 1 description
+                  quantity: 10
+        "400":
+          $ref: "#/components/responses/400"
+        "404":
+          $ref: "#/components/responses/404"
+        "500":
+          $ref: "#/components/responses/500"
+    delete:
+      tags:
+        - products
+      summary: Delete product by its id
+      description: Delete product by its id.
+      parameters:
+        - name: id
+          in: path
+          description: Product ID
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StandardResponse"
+              example:
+                code: 200
+                message: OK
+                data:
+                  id: 1
+                  name: Product 1
+                  description: Product 1 description
+                  quantity: 10
+        "400":
+          $ref: "#/components/responses/400"
+        "404":
+          $ref: "#/components/responses/404"
+        "500":
+          $ref: "#/components/responses/500"
+components:
+  schemas:
+    RequestInsertProduct:
+      type: object
+      required:
+        - name
+        - description
+        - quantity
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        quantity:
+          type: integer
+          format: int32
+    RequestUpdateProduct:
+      type: object
+      required:
+        - name
+        - description
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+    RequestUpdateProductQuantity:
+      type: object
+      required:
+        - quantity
+      properties:
+        quantity:
+          type: integer
+          format: int32
+    StandardResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+        data: {}
+  responses:
+    "400":
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/StandardResponse"
+          example:
+            code: 400
+            message: Bad Request
+            data: null
+    "404":
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/StandardResponse"
+          example:
+            code: 404
+            message: Not Found
+            data: null
+    "500":
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/StandardResponse"
+          example:
+            code: 500
+            message: Internal Server Error
+            data: null
+  requestBodies:
+    InsertProduct:
+      description: Product information.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/RequestInsertProduct"
+          examples:
+            Product1:
+              $ref: "#/components/examples/Product1"
+            Product2:
+              $ref: "#/components/examples/Product2"
+    UpdateProduct:
+      description: Product information
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/RequestUpdateProduct"
+          examples:
+            Product1:
+              $ref: "#/components/examples/Product1Update"
+            Product2:
+              $ref: "#/components/examples/Product2Update"
+    UpdateProductQuantity:
+      description: Product information
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/RequestUpdateProductQuantity"
+          examples:
+            Product1:
+              $ref: "#/components/examples/Product1UpdateQuantity"
+            Product2:
+              $ref: "#/components/examples/Product2UpdateQuantity"
+  examples:
+    Product1:
+      summary: Product 1
+      value:
+        name: Product 1
+        description: Product 1 description
+        quantity: 10
+    Product2:
+      summary: Product 2
+      value:
+        name: Product 2
+        description: Product 2 description
+        quantity: 10
+    Product1Update:
+      summary: Product 1
+      value:
+        name: Product 1 update
+        description: Product 1 description update
+    Product2Update:
+      summary: Product 2
+      value:
+        name: Product 2 update
+        description: Product 2 description update
+    Product1UpdateQuantity:
+      summary: Product 1
+      value:
+        quantity: 42
+    Product2UpdateQuantity:
+      summary: Product 2
+      value:
+        quantity: 42
