@@ -1,7 +1,7 @@
 package memory
 
 import (
-	"log"
+	"fmt"
 	"productsapi/internal/dto/request"
 	"productsapi/internal/model"
 	"productsapi/internal/repository"
@@ -36,7 +36,7 @@ func (p *product) AddProduct(productDTO *request.ProductInsert) (*model.Product,
 	return pr, nil
 }
 
-func (p *product) GetProducts(page, size int, search, sortBy, sortDir string) ([]*model.Product, error) {
+func (p *product) GetProducts(page, size int, search string, orderDir bool) ([]*model.Product, error) {
 	return p.db, nil
 }
 
@@ -46,7 +46,11 @@ func (p *product) GetProductById(id int) (*model.Product, error) {
 			return v, nil
 		}
 	}
-	return nil, repository.ErrRepositoryDataNotFound
+	return nil, fmt.Errorf(
+		"%s: %w",
+		repository.CtxGetProductById,
+		&repository.ErrDataNotFound,
+	)
 }
 
 func (p *product) UpdateProduct(id int, productDTO *request.ProductUpdate) (*model.Product, error) {
@@ -57,8 +61,11 @@ func (p *product) UpdateProduct(id int, productDTO *request.ProductUpdate) (*mod
 		}
 	}
 	if pr == nil {
-		log.Println(repository.LogUpdateProduct, repository.ErrRepositoryDataNotFound)
-		return nil, repository.ErrRepositoryDataNotFound
+		return nil, fmt.Errorf(
+			"%s: %w",
+			repository.CtxUpdateProduct,
+			&repository.ErrDataNotFound,
+		)
 	}
 	pr.Name = productDTO.Name
 	pr.Description = productDTO.Description
@@ -73,8 +80,11 @@ func (p *product) UpdateProductQuantity(id int, productDTO *request.ProductUpdat
 		}
 	}
 	if pr == nil {
-		log.Println(repository.LogUpdateProductQuantity, repository.ErrRepositoryDataNotFound)
-		return nil, repository.ErrRepositoryDataNotFound
+		return nil, fmt.Errorf(
+			"%s: %w",
+			repository.CtxUpdateProductQuantity,
+			&repository.ErrDataNotFound,
+		)
 	}
 	pr.Quantity = *productDTO.Quantity
 	return pr, nil
@@ -89,8 +99,11 @@ func (p *product) DeleteProduct(id int) (*model.Product, error) {
 		}
 	}
 	if pr == nil {
-		log.Println(repository.LogDeleteProduct, repository.ErrRepositoryDataNotFound)
-		return nil, repository.ErrRepositoryDataNotFound
+		return nil, fmt.Errorf(
+			"%s: %w",
+			repository.CtxDeleteProduct,
+			&repository.ErrDataNotFound,
+		)
 	}
 	return pr, nil
 }

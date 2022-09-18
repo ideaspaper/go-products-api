@@ -8,6 +8,7 @@ import (
 	"productsapi/internal/dto/request"
 	"productsapi/internal/repository"
 	"strconv"
+	"strings"
 
 	"github.com/gorilla/mux"
 )
@@ -54,7 +55,24 @@ func (h Handler) AddProduct(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h Handler) GetProducts(w http.ResponseWriter, r *http.Request) {
-	products, err := h.productService.GetProducts(0, 0, "", false)
+	query := r.URL.Query().Get
+	pageQuery := query("page")
+	page, err := strconv.Atoi(pageQuery)
+	if err != nil {
+		page = 1
+	}
+	sizeQuery := query("size")
+	size, err := strconv.Atoi(sizeQuery)
+	if err != nil {
+		size = 10
+	}
+	search := query("search")
+	orderDirQuery := query("order_dir")
+	orderDir := false
+	if strings.ToLower(orderDirQuery) == "desc" {
+		orderDir = true
+	}
+	products, err := h.productService.GetProducts(page, size, search, orderDir)
 	if err != nil {
 		log.Printf("%s: %v\n", CtxGetProducts, err)
 		SendResponse(

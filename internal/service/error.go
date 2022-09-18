@@ -1,8 +1,10 @@
 package service
 
-import "errors"
-
-var (
-	ErrServiceUnknown      = errors.New("ERROR: [Service] Unknown")
-	ErrServiceDataNotFound = errors.New("ERROR: [Service] Data Not Found")
+const (
+	CtxAddProduct            = "Service#AddProduct"
+	CtxGetProducts           = "Service#GetProducts"
+	CtxGetProductById        = "Service#GetProductById"
+	CtxUpdateProduct         = "Service#UpdateProduct"
+	CtxUpdateProductQuantity = "Service#UpdateProductQuantity"
+	CtxDeleteProduct         = "Service#DeleteProduct"
 )
