@@ -1,6 +1,6 @@
 package handler
 
-var (
+const (
 	LogAddProduct            = "Handler#AddProduct"
 	LogGetProducts           = "Handler#GetProducts"
 	LogGetProductById        = "Handler#GetProductById"

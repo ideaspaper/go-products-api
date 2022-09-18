@@ -1,6 +1,6 @@
 package repository
 
-var (
+const (
 	LogAddProduct            = "Repository#AddProduct"
 	LogGetProducts           = "Repository#GetProducts"
 	LogGetProductById        = "Repository#GetProductById"

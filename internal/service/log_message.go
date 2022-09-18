@@ -1,6 +1,6 @@
 package service
 
-var (
+const (
 	LogAddProduct            = "Service#AddProduct"
 	LogGetProducts           = "Service#GetProducts"
 	LogGetProductById        = "Service#GetProductById"
