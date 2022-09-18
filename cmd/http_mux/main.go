@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"net/http"
 	"productsapi/cmd/http_mux/internal/handler"
 	"productsapi/cmd/http_mux/internal/router"
@@ -47,5 +48,7 @@ func initHandlers() *handler.Handler {
 func main() {
 	h := initHandlers()
 	r := router.New(h)
-	http.ListenAndServe(":8080", r)
+	if err := http.ListenAndServe(":8080", r); err != nil {
+		log.Fatalln(err)
+	}
 }
