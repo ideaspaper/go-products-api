@@ -140,8 +140,7 @@ func (p *product) UpdateProduct(id int, productDTO *request.ProductUpdate) (*mod
 		context.Background(),
 		`
 			UPDATE products_tab
-			SET name = $1,
-				description = $2
+			SET name = $1, description = $2
 			WHERE "ID" = $3
 			RETURNING "ID", name, description, quantity;
 		`,
