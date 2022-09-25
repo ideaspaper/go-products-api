@@ -54,14 +54,14 @@ func (p *product) AddProduct(productDTO *request.ProductInsert) (*model.Product,
 	return product, nil
 }
 
-func (p *product) GetProducts(page, size int, search string, orderDir bool) ([]*model.Product, error) {
+func (p *product) GetProducts(page, size int, search string, orderDir bool) ([]*model.Product, int, error) {
 	products := []*model.Product{}
 	offset := (page - 1) * size
 	limit := size
 	rows, err := p.db.Query(
 		context.Background(),
 		`
-			SELECT "ID", name, description, quantity
+			SELECT COUNT(*) OVER() as total, "ID", name, description, quantity
 			FROM products_tab
 			WHERE name ILIKE $1
 			ORDER BY
@@ -76,21 +76,23 @@ func (p *product) GetProducts(page, size int, search string, orderDir bool) ([]*
 		limit,
 	)
 	if err != nil {
-		return nil, fmt.Errorf(
+		return nil, 0, fmt.Errorf(
 			"%s: %w",
 			repository.CtxGetProducts,
 			repository.ErrUnknown.SetError(err),
 		)
 	}
+	count := 0
 	for rows.Next() {
 		product := &model.Product{}
 		if err := rows.Scan(
+			&count,
 			&product.ID,
 			&product.Name,
 			&product.Description,
 			&product.Quantity,
 		); err != nil {
-			return nil, fmt.Errorf(
+			return nil, count, fmt.Errorf(
 				"%s: %w",
 				repository.CtxGetProducts,
 				repository.ErrUnknown.SetError(err),
@@ -98,7 +100,7 @@ func (p *product) GetProducts(page, size int, search string, orderDir bool) ([]*
 		}
 		products = append(products, product)
 	}
-	return products, nil
+	return products, count, nil
 }
 
 func (p *product) GetProductById(id int) (*model.Product, error) {

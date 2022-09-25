@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"productsapi/internal/dto/request"
+	"productsapi/internal/dto/response"
 	"productsapi/internal/repository"
 	"strconv"
 	"strings"
@@ -72,7 +73,7 @@ func (h Handler) GetProducts(w http.ResponseWriter, r *http.Request) {
 	if strings.ToLower(orderDirQuery) == "desc" {
 		orderDir = true
 	}
-	products, err := h.productService.GetProducts(page, size, search, orderDir)
+	products, count, err := h.productService.GetProducts(page, size, search, orderDir)
 	if err != nil {
 		log.Printf("%s: %v\n", CtxGetProducts, err)
 		SendResponse(
@@ -87,7 +88,12 @@ func (h Handler) GetProducts(w http.ResponseWriter, r *http.Request) {
 		w,
 		http.StatusOK,
 		http.StatusText(http.StatusOK),
-		products,
+		&response.ProductWithPagination{
+			Count:     count,
+			Page:      page,
+			TotalPage: (count / size) + 1,
+			Products:  products,
+		},
 	)
 }
 

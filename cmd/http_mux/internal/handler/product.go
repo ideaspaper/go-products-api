@@ -54,7 +54,7 @@ func (h Handler) AddProduct(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h Handler) GetProducts(w http.ResponseWriter, r *http.Request) {
-	products, err := h.productService.GetProducts(0, 0, "", false)
+	products, _, err := h.productService.GetProducts(0, 0, "", false)
 	if err != nil {
 		log.Printf("%s: %v\n", CtxGetProducts, err)
 		SendResponse(

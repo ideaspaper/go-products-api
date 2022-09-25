@@ -33,10 +33,10 @@ func (p product) AddProduct(productDTO *request.ProductInsert) (*response.Produc
 	return product.ToDTO(), nil
 }
 
-func (p product) GetProducts(page, size int, search string, orderDir bool) ([]*response.Product, error) {
-	products, err := p.productRepository.GetProducts(page, size, search, orderDir)
+func (p product) GetProducts(page, size int, search string, orderDir bool) ([]*response.Product, int, error) {
+	products, count, err := p.productRepository.GetProducts(page, size, search, orderDir)
 	if err != nil {
-		return nil, fmt.Errorf(
+		return nil, 0, fmt.Errorf(
 			"%s: %w",
 			CtxGetProducts,
 			err,
@@ -46,7 +46,7 @@ func (p product) GetProducts(page, size int, search string, orderDir bool) ([]*r
 	for _, product := range products {
 		result = append(result, product.ToDTO())
 	}
-	return result, nil
+	return result, count, nil
 }
 
 func (p product) GetProductById(id int) (*response.Product, error) {

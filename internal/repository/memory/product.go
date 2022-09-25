@@ -36,8 +36,8 @@ func (p *product) AddProduct(productDTO *request.ProductInsert) (*model.Product,
 	return pr, nil
 }
 
-func (p *product) GetProducts(page, size int, search string, orderDir bool) ([]*model.Product, error) {
-	return p.db, nil
+func (p *product) GetProducts(page, size int, search string, orderDir bool) ([]*model.Product, int, error) {
+	return p.db, 0, nil
 }
 
 func (p *product) GetProductById(id int) (*model.Product, error) {

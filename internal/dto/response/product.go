@@ -6,3 +6,10 @@ type Product struct {
 	Description string `json:"description"`
 	Quantity    int    `json:"quantity"`
 }
+
+type ProductWithPagination struct {
+	Count     int        `json:"count"`
+	Page      int        `json:"page"`
+	TotalPage int        `json:"total_page"`
+	Products  []*Product `json:"products"`
+}
